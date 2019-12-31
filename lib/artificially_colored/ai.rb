@@ -1,0 +1,3 @@
+class ArtificiallyColored::AI
+
+end

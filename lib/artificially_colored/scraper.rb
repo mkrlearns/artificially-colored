@@ -1,0 +1,3 @@
+class ArtificiallyColored::Scraper
+
+end
