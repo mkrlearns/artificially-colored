@@ -1,6 +1,4 @@
 class ArtificiallyColored::AI
-
-  attr_accessor :ai_connect
   
   def ai_connect(array)
     if array.include?(',') then array = array.split(',')
@@ -25,7 +23,7 @@ class ArtificiallyColored::AI
       json['result'].each do |color|
         palette << ArtificiallyColored::Scraper.new.convert_color("rgb(#{color.to_s.delete('[]')})")
       end
-      puts palette
+      return palette
     else
       puts 'Unable to connect to API.'
     end

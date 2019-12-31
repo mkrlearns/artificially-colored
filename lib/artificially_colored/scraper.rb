@@ -1,11 +1,5 @@
 class ArtificiallyColored::Scraper
 
-  attr_accessor :convert_color
-  
-  # def initialize(hex=nil, rgb=nil, hsl=nil, hsv=nil)
-    
-  # end
-
   def convert_color(color)
     color = color.delete!('()°%').gsub!(',', '_').gsub!(' ', '') if color.include? ','
     
@@ -22,8 +16,6 @@ class ArtificiallyColored::Scraper
     else
       puts "Invalid color code, try again."
     end
-  
-    puts "https://convertingcolors.com/#{url.strip}.html"
     
     doc = Nokogiri::HTML(open("https://convertingcolors.com/#{url.strip}.html"))
     
