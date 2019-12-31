@@ -5,7 +5,7 @@ class ArtificiallyColored::CLI
   end
   
   def main_menu
-    ArtificiallyColored::AI.new.ai_connect
+    ArtificiallyColored::AI.new.ai_connect('fff')
   end
 
 end

@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'net/http'
 require 'uri'
 require 'json'
+require 'open-uri'
 
 require_relative '../lib/artificially_colored/scraper'
 require_relative '../lib/artificially_colored/ai'
