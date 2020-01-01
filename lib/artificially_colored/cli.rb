@@ -2,6 +2,9 @@ class ArtificiallyColored::CLI
 
   def initialize
     @scraper = ArtificiallyColored::Scraper
+    @selections = ""
+    @user_inputs = []
+    @rgb_selections = []
   end
 
   def call
@@ -9,25 +12,49 @@ class ArtificiallyColored::CLI
   end
   
   def main_menu
-    puts @scraper.new(gets).rgb
-    #ai_menu
+    ai_menu
   end
 
   def ai_menu
-    puts "Enter a comma seperated list of 1-4 colors."
-    puts "You may use any valid hex, rgb, hsl, or hsv color code."
-    puts "Example: #AE81FF,#66D9EF,#E69F66,"
-    puts "A five color AI generated palette will be returned."
-    user_colors = gets
-    clear
-    puts "The higher the number of palettes the longer it will take."
-    puts "Ten is the highest number of palettes you may return."
-    puts "Any duplicates generated will be removed from results."
-    puts
-    puts "How many palettes would you like to generate?"
-    user_num = gets.strip.to_i
-    user_num = 10 if user_num > 10
-    ai_get_results(user_colors, user_num)
+    i = 0
+    4.times do
+      clear
+      puts "Enter the first color or enter \"done\" to generate random palettes:" if i == 0
+      puts "Current Selections:" if i > 0
+      puts @selections if i > 0
+      puts if i > 0
+      puts "Enter the next color or enter \"done\" to generate palettes:" if i > 0
+      user_input = gets.strip
+      if user_input.downcase == "done"
+        main_menu
+        break
+      else
+        color = @scraper.new(user_input)
+        while !color.rgb
+          puts "Invalid color, please try again."
+          user_input = gets.strip
+          color = @scraper.new(user_input)
+        end
+        @selections += "#{color_bar(1, color.hex)}  #{user_input} "
+        @user_inputs << user_input
+        @rgb_selections << color.rgb
+        i += 1
+      end
+    end
+    # puts "Enter a comma seperated list of 1-4 colors."
+    # puts "You may use any valid hex, rgb, hsl, or hsv color code."
+    # puts "Example: #AE81FF,#66D9EF,#E69F66,"
+    # puts "A five color AI generated palette will be returned."
+    # user_colors = gets
+    # clear
+    # puts "The higher the number of palettes the longer it will take."
+    # puts "Ten is the highest number of palettes you may return."
+    # puts "Any duplicates generated will be removed from results."
+    # puts
+    # puts "How many palettes would you like to generate?"
+    # user_num = gets.strip.to_i
+    # user_num = 10 if user_num > 10
+    # ai_get_results(user_colors, user_num)
   end
 
   def ai_get_results(user_colors, user_num)
@@ -74,6 +101,6 @@ class ArtificiallyColored::CLI
   end
 
   def color_bar(width, color)
-    Rainbow("▇" * width).color(color)
+    Rainbow("▉" * width).color(color)
   end
 end
