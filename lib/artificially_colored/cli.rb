@@ -26,7 +26,9 @@ class ArtificiallyColored::CLI
       puts "Enter the next color or enter \"done\" to generate palettes:" if i > 0
       user_input = gets.strip
       if user_input.downcase == "done"
-        ai_get_results(@rgb_selections, 5)
+        array = ai_prepare_array(@rgb_selections)
+        puts array.to_s
+        ai_get_results(array, 5)
         break
       else
         color = @scraper.new(user_input)
@@ -41,20 +43,6 @@ class ArtificiallyColored::CLI
         i += 1
       end
     end
-    # puts "Enter a comma seperated list of 1-4 colors."
-    # puts "You may use any valid hex, rgb, hsl, or hsv color code."
-    # puts "Example: #AE81FF,#66D9EF,#E69F66,"
-    # puts "A five color AI generated palette will be returned."
-    # user_colors = gets
-    # clear
-    # puts "The higher the number of palettes the longer it will take."
-    # puts "Ten is the highest number of palettes you may return."
-    # puts "Any duplicates generated will be removed from results."
-    # puts
-    # puts "How many palettes would you like to generate?"
-    # user_num = gets.strip.to_i
-    # user_num = 10 if user_num > 10
-    # ai_get_results(user_colors, user_num)
   end
 
   def ai_get_results(user_colors, user_num)
@@ -87,8 +75,8 @@ class ArtificiallyColored::CLI
     clear
     info = all[selection]
     info.each do |i|
-      bar = color_bar(1, i[:hex])
-      puts "#{bar}  #{i[:hex].ljust(8)} #{bar}  #{i[:rgb].ljust(18)} #{bar}  #{i[:hsl].ljust(20)} #{bar}  #{i[:hsv]}"
+      bar = color_bar(1, i.hex)
+      puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)} #{bar}  #{i.hsv}"
     end
   end
 
@@ -102,5 +90,11 @@ class ArtificiallyColored::CLI
 
   def color_bar(width, color)
     Rainbow("▉" * width).color(color)
+  end
+
+  def ai_prepare_array(array)
+    array.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
+    array << "N" while array.length < 5 && array.length > 0
+    return array
   end
 end

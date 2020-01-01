@@ -5,19 +5,6 @@ class ArtificiallyColored::AI
   end
 
   def ai_connect(array)
-
-    if array != []
-      array.map! do |color|
-        if color.length > 1
-          color.delete('rgb()').split(',').map(&:to_i)
-        else
-          color = color
-        end
-      end
-    end
-
-    array << "N" while array.length < 5 && array.length > 0
-
     uri = URI.parse("http://colormind.io/api/")
     request = Net::HTTP::Post.new(uri)
     if array == []
