@@ -1,6 +1,7 @@
 class ArtificiallyColored::Scraper
-
-  def convert_color(color)
+  attr_reader :rgb, :hex, :hsl, :hsv
+  
+  def initialize(color)
     color = color.delete!('()°%').gsub!(',', '_').gsub!(' ', '') if color.include? ','
     
     if color.downcase.include? 'rgb'
@@ -16,16 +17,21 @@ class ArtificiallyColored::Scraper
     else
       puts "Invalid color code, try again."
     end
-    
-    doc = Nokogiri::HTML(open("https://convertingcolors.com/#{url.strip}.html"))
-    
-    rgb = doc.css('#copyRgbtext').text
-    hex = doc.css('#copyHextext').text
-    hsl = doc.css('#copyHSLtext').text
-    hsv = doc.css('#copyHSVtext').text
-    
-    return { rgb: "rgb(#{rgb})", hex: "##{hex}", hsl: "hsl(#{hsl})", hsv: "hsv(#{hsv})"}
-  
+
+    begin
+      file = open("https://convertingcolors.com/#{url.strip}.html")
+      doc = Nokogiri::HTML(file)
+      @rgb = "rgb(#{doc.css('#copyRgbtext').text})"
+      @hex = "##{doc.css('#copyHextext').text})"
+      @hsl = "hsl(#{doc.css('#copyHSLtext').text})"
+      @hsv = "hsv(#{doc.css('#copyHSVtext').text})"
+    rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found'
+        puts "Invalid color code, try again."
+      else
+        raise e
+      end
+    end
   end
 
 end

@@ -1,11 +1,16 @@
 class ArtificiallyColored::CLI
 
+  def initialize
+    @scraper = ArtificiallyColored::Scraper
+  end
+
   def call
     main_menu
   end
   
   def main_menu
-    ai_menu
+    puts @scraper.new(gets).rgb
+    #ai_menu
   end
 
   def ai_menu
