@@ -26,7 +26,7 @@ class ArtificiallyColored::CLI
       puts "Enter the next color or enter \"done\" to generate palettes:" if i > 0
       user_input = gets.strip
       if user_input.downcase == "done"
-        main_menu
+        ai_get_results(@rgb_selections, 5)
         break
       else
         color = @scraper.new(user_input)
@@ -68,7 +68,7 @@ class ArtificiallyColored::CLI
       swatches = []
       gen_colors = ArtificiallyColored::AI.new.ai_connect(user_colors)
       all << gen_colors
-      gen_colors.each { |i| swatches << color_bar(6, i[:hex])}
+      gen_colors.each { |i| swatches << color_bar(6, i.hex)}
       palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"
     end
     ai_display_results(palettes, all.uniq)
