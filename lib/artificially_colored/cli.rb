@@ -33,10 +33,11 @@ class ArtificiallyColored::CLI
   end
 
   def selection_menu
-    puts clr_str("1. ", "#A6E22E") + "Create an AI generated color palette."
-    puts clr_str("2. ", "#A6E22E") + "Convert CSS color codes."
+    puts clr_str("1. ", "#A6E22E") + "Create an AI generated color palette"
+    puts clr_str("2. ", "#A6E22E") + "Convert CSS color codes"
+    puts clr_str("3. ", "#A6E22E") + "Credits"
     puts
-    puts clr_str("Enter a selection of 1 or 2:", "#A6E22E")
+    puts clr_str("Enter a selection between 1 and 3:", "#A6E22E")
     selection = gets.strip
     if selection == "1"
       clear
@@ -44,11 +45,23 @@ class ArtificiallyColored::CLI
     elsif selection == "2"
       clear
       convert_menu
+    elsif selection == "3"
+      clear
+      credits
     else
       clear
       puts clr_str("Invalid selection, please try again.", "#F92672")
       selection_menu
     end
+  end
+
+  def credits
+    type_on("Artificially Colored was created by Ryan Meek.\nColor conversions scraped from https://convertingcolors.com/.\nDeep learning color palettes API from http://colormind.io/.\n\n", "#A6E22E")
+    puts
+    puts clr_str("Press \"Enter\" to go back to menu.", "#A6E22E")
+    gets
+    clear
+    selection_menu
   end
 
   def convert_menu
@@ -75,7 +88,7 @@ class ArtificiallyColored::CLI
     puts converted.rgb
     puts converted.hsl
     puts
-    puts "Press \"Enter\" to go back to menu."
+    puts clr_str("Press \"Enter\" to go back to menu.", "#A6E22E")
     gets
     clear
     selection_menu
