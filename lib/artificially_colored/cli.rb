@@ -14,8 +14,7 @@ class ArtificiallyColored::CLI
   def main_menu
     clear
     intro
-    puts
-    puts clr_str("Press \"Enter\" to continue", "#A6E22E")
+    puts clr_str("\nPress \"Enter\" to continue", "#A6E22E")
     gets
     clear
     selection_menu
@@ -23,10 +22,7 @@ class ArtificiallyColored::CLI
 
   def intro
     puts "\e[?25l"
-    puts type_on("Welcome to Artificially Colored!", "#A6E22E")
-    clear
-    puts clr_str("Welcome to Artificially Colored!", "#A6E22E")
-    puts
+    puts type_on("Welcome to Artificially Colored!\n", "#A6E22E")
     puts "This tool will generate color palettes aided by AI "
     puts "and convert CSS color codes to and from hex, rgb, and hsl."
     puts "\e[?25h"
@@ -34,30 +30,21 @@ class ArtificiallyColored::CLI
 
   def selection_menu
     puts clr_str("1. ", "#A6E22E") + "Create an AI generated color palette"
-    puts clr_str("2. ", "#A6E22E") + "Convert CSS color codes"
-    puts clr_str("3. ", "#A6E22E") + "Credits"
-    puts
+    puts clr_str("2. ", "#A6E22E") + "Convert color codes"
+    puts clr_str("3. ", "#A6E22E") + "Credits\n\n"
     puts clr_str("Enter a selection between 1 and 3:", "#A6E22E")
     selection = gets.strip
-    if selection == "1"
-      clear
-      ai_menu
-    elsif selection == "2"
-      clear
-      convert_menu
-    elsif selection == "3"
-      clear
-      credits
-    else
-      clear
-      puts clr_str("Invalid selection, please try again.", "#F92672")
-      selection_menu
-    end
+    clear
+    ai_menu if selection == "1"
+    convert_menu if selection == "2"
+    credits if selection == "3"
+    clear
+    puts clr_str("Invalid selection, please try again.", "#F92672")
+    selection_menu
   end
 
   def credits
     type_on("Artificially Colored was created by Ryan Meek.\nColor conversions scraped from https://convertingcolors.com/.\nDeep learning color palettes API from http://colormind.io/.\n\n", "#A6E22E")
-    puts
     puts clr_str("Press \"Enter\" to go back to menu.", "#A6E22E")
     gets
     clear
@@ -65,10 +52,9 @@ class ArtificiallyColored::CLI
   end
 
   def convert_menu
-    puts clr_str("Convert between hex, rgb, or hsl CSS colors.", "#A6E22E")
+    puts clr_str("Convert between hex, rgb, or hsl colors.", "#A6E22E")
     puts "Examples of valid colors:"
-    puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)"
-    puts
+    puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
     puts clr_str("Enter a color code to convert:", "#A6E22E")
     converted = @get_colors.new(gets.strip)
     puts converted
@@ -87,8 +73,7 @@ class ArtificiallyColored::CLI
     puts converted.hex
     puts converted.rgb
     puts converted.hsl
-    puts
-    puts clr_str("Press \"Enter\" to go back to menu.", "#A6E22E")
+    puts clr_str("\nPress \"Enter\" to go back to menu.", "#A6E22E")
     gets
     clear
     selection_menu
@@ -103,16 +88,13 @@ class ArtificiallyColored::CLI
       clear
       if i == 0
         puts "Examples of valid colors:"
-        puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)"
-        puts
+        puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
         puts clr_str("Enter the first color or enter \"done\" to generate random palettes:", "#A6E22E")
       else
-        puts clr_str("Enter \"clear\" to clear current selections.", "#A6E22E")
-        puts
+        puts clr_str("Enter \"clear\" to clear current selections.\n", "#A6E22E")
         puts "Current Selections:"
         puts selections
-        puts
-        puts clr_str("Enter the next color or enter \"done\" to generate palettes:", "#A6E22E")
+        puts clr_str("\nEnter the next color or enter \"done\" to generate palettes:", "#A6E22E")
       end
       user_input = gets.strip.downcase
       if user_input == "clear"
@@ -186,8 +168,7 @@ class ArtificiallyColored::CLI
       bar = color_bar(1, i.hex)
       puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)}"
     end
-    puts
-    puts clr_str("Press \"Enter\" to go back. Type \"new\" to start fresh or \"exit\" to quit.", "#A6E22E")
+    puts clr_str("\nPress \"Enter\" to go back. Type \"new\" to start fresh or \"exit\" to quit.", "#A6E22E")
     selection = gets.downcase.strip
     self.class.new.selection_menu if selection == "new"
     exit if selection == "exit"
