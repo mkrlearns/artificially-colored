@@ -1,9 +1,8 @@
 class ArtificiallyColored::CLI
 
   def initialize
-    @selections = ""
-    @user_inputs = []
-    @rgb_selections = []
+    @palettes = []
+    @all_colors = []
   end
 
   def call
@@ -16,13 +15,16 @@ class ArtificiallyColored::CLI
 
   def ai_menu
     i = 0
+    selections = ""
+    user_inputs = []
+    rgb_selections = []
     4.times do
       clear
       if i == 0
         puts "Enter the first color or enter \"done\" to generate random palettes:"
       else
         puts "Current Selections:"
-        puts @selections
+        puts selections
         puts
         puts "Enter the next color or enter \"done\" to generate palettes:"
       end
@@ -35,9 +37,9 @@ class ArtificiallyColored::CLI
           puts "How many palettes would you like to generate (1-10)?"
           user_num = gets.strip.to_i
         end
-        @rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
-        @rgb_selections << "N" while @rgb_selections.length < 5
-        ai_get_results(@rgb_selections, user_num)
+        rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
+        rgb_selections << "N" while rgb_selections.length < 5
+        ai_get_results(rgb_selections, user_num)
         break
       else
         color = ArtificiallyColored::Scraper.new(user_input)
@@ -46,50 +48,49 @@ class ArtificiallyColored::CLI
           user_input = gets.strip
           color = ArtificiallyColored::Scraper.new(user_input)
         end
-        @selections += "#{color_bar(1, color.hex)}  #{user_input} "
-        @user_inputs << user_input
-        @rgb_selections << color.rgb
+        selections += "#{color_bar(1, color.hex)}  #{user_input} "
+        user_inputs << user_input
+        rgb_selections << color.rgb
         i += 1
       end
     end
   end
 
   def ai_get_results(user_colors, user_num)
-    palettes = []
-    all = []
-    loading = fake_loader
+    loading = ""
     user_num.times do
       clear
+      puts "Depending on the amount of palettes, this may take some time."
       puts loading + "\e[?25l"
       loading += fake_loader + fake_loader
       swatches = []
       gen_colors = ArtificiallyColored::AI.new.ai_connect(user_colors)
-      all << gen_colors
+      @all_colors << gen_colors
       gen_colors.each { |i| swatches << color_bar(6, i.hex)}
-      palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"
+      @palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"
     end
-    ai_display_results(palettes, all.uniq)
+    ai_display_results
   end
 
-  def ai_display_results(palettes, all)
+  def ai_display_results
     clear
-    palettes.uniq.each { |palette| puts "#{palettes.uniq.index(palette) + 1}: #{palette}\n" }
+    @palettes.uniq.each { |palette| puts "#{@palettes.uniq.index(palette) + 1}: #{palette}\n" }
     puts "\e[?25h"
     puts "Select a number for the color codes to that number's palette."
     selection = gets.strip.to_i - 1
-    ai_more_info(selection, palettes, all)
+    ai_more_info(selection)
   end
 
-  def ai_more_info(selection, palettes, all)
+  def ai_more_info(selection)
     clear
-    info = all[selection]
+    info = @all_colors.uniq[selection]
     info.each do |i|
       bar = color_bar(1, i.hex)
       puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)} #{bar}  #{i.hsv}"
     end
     puts "Enter \"back\" to go back, \"new\" to start fresh, or \"exit\" to quit."
     gets
-    ai_display_results(palettes, all)
+    ai_display_results
   end
 
   def clear
