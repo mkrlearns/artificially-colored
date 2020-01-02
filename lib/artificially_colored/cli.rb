@@ -14,7 +14,8 @@ class ArtificiallyColored::CLI
   def main_menu
     clear
     intro
-    puts "Press \"Enter\" to continue"
+    puts
+    puts clr_str("Press \"Enter\" to continue", "#A6E22E")
     gets
     clear
     selection_menu
@@ -22,15 +23,19 @@ class ArtificiallyColored::CLI
   end
 
   def intro
-    puts "Welcome to Artificially Colored!"
+    puts type_on("Welcome to Artificially Colored!", "#A6E22E")
+    clear
+    puts clr_str("Welcome to Artificially Colored!", "#A6E22E")
     puts
-    puts "This tool will generate color palettes aided by AI and "
-    puts "convert CSS color codes."
+    puts "This tool will generate color palettes aided by AI "
+    puts "and convert CSS color codes to and from hex, rgb, hsl, and hsv."
   end
 
   def selection_menu
-    puts "1. Create an AI generated color palette."
-    puts "2. Convert CSS color codes."
+    puts clr_str("1. ", "#A6E22E") + "Create an AI generated color palette."
+    puts clr_str("2. ", "#A6E22E") + "Convert CSS color codes."
+    puts
+    puts clr_str("Enter selection 1 or 2", "#A6E22E")
     selection = gets.strip
     if selection == "1"
       clear
@@ -164,6 +169,27 @@ class ArtificiallyColored::CLI
 
   def color_bar(width, color)
     Rainbow("▉" * width).color(color)
+  end
+
+  def clr_str(string, color)
+    Rainbow(string).color(color)
+  end
+
+  def type_on(string, color)
+    i = string.length
+    while i > 0 do
+      clear
+      print Rainbow(string[0...-i]).color(color) + "\e"
+      i -= 1
+      sleep(0.04)
+    end
+    puts "\e[?25l"
+    15.times do
+      clear
+      print Rainbow(string).color(@cycle_colors.sample)
+      sleep(0.1)
+    end
+    puts "\e[?25h"
   end
 
 end
