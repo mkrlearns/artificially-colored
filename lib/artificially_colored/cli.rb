@@ -28,9 +28,16 @@ class ArtificiallyColored::CLI
       end
       user_input = gets.strip
       if user_input.downcase == "done"
-        array = ai_prepare_array(@rgb_selections)
-        puts array.to_s
-        ai_get_results(array, 5)
+        user_num = 498.498
+        while !(user_num > 0 && user_num <= 10)
+          clear
+          puts "Invalid selection." if user_num != 498.498
+          puts "How many palettes would you like to generate (1-10)?"
+          user_num = gets.strip.to_i
+        end
+        @rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
+        @rgb_selections << "N" while @rgb_selections.length < 5
+        ai_get_results(@rgb_selections, user_num)
         break
       else
         color = ArtificiallyColored::Scraper.new(user_input)
@@ -68,18 +75,21 @@ class ArtificiallyColored::CLI
     clear
     palettes.uniq.each { |palette| puts "#{palettes.uniq.index(palette) + 1}: #{palette}\n" }
     puts "\e[?25h"
-    puts "Select a number for color codes to that palette."
+    puts "Select a number for the color codes to that number's palette."
     selection = gets.strip.to_i - 1
-    ai_more_info(selection, all)
+    ai_more_info(selection, palettes, all)
   end
 
-  def ai_more_info(selection, all)
+  def ai_more_info(selection, palettes, all)
     clear
     info = all[selection]
     info.each do |i|
       bar = color_bar(1, i.hex)
       puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)} #{bar}  #{i.hsv}"
     end
+    puts "Enter \"back\" to go back, \"new\" to start fresh, or \"exit\" to quit."
+    gets
+    ai_display_results(palettes, all)
   end
 
   def clear
@@ -94,9 +104,4 @@ class ArtificiallyColored::CLI
     Rainbow("▉" * width).color(color)
   end
 
-  def ai_prepare_array(array)
-    array.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
-    array << "N" while array.length < 5 && array.length > 0
-    return array
-  end
 end
