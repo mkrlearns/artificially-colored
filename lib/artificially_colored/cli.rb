@@ -223,6 +223,8 @@ class ArtificiallyColored::CLI
       print Rainbow(string).color(@cycle_colors.sample)
       sleep(0.1)
     end
+    clear
+    print Rainbow(string).color(color)
   end
 
 end
