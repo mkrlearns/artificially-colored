@@ -19,23 +19,24 @@ class ArtificiallyColored::CLI
     gets
     clear
     selection_menu
-    ai_menu
   end
 
   def intro
+    puts "\e[?25l"
     puts type_on("Welcome to Artificially Colored!", "#A6E22E")
     clear
     puts clr_str("Welcome to Artificially Colored!", "#A6E22E")
     puts
     puts "This tool will generate color palettes aided by AI "
     puts "and convert CSS color codes to and from hex, rgb, hsl, and hsv."
+    puts "\e[?25h"
   end
 
   def selection_menu
     puts clr_str("1. ", "#A6E22E") + "Create an AI generated color palette."
     puts clr_str("2. ", "#A6E22E") + "Convert CSS color codes."
     puts
-    puts clr_str("Enter selection 1 or 2", "#A6E22E")
+    puts clr_str("Enter a selection of 1 or 2:", "#A6E22E")
     selection = gets.strip
     if selection == "1"
       clear
@@ -45,18 +46,26 @@ class ArtificiallyColored::CLI
       convert_menu
     else
       clear
-      puts "Invalid selection, please try again."
+      puts clr_str("Invalid selection, please try again.", "#F92672")
       selection_menu
     end
   end
 
   def convert_menu
-    puts "This tool will convert a hex, rgb, hsl, or hsv CSS color to "
-    puts "all of the previously mentioned codes."
-    puts "Examples of valid colors: #E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
-    puts "Enter a color code to convert:"
+    puts "Convert between hex, rgb, hsl, or hsv CSS colors."
+    puts "Examples of valid colors:"
+    puts "#E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
+    puts
+    puts clr_str("Enter a color code to convert:", "#A6E22E")
     converted = @get_colors.new(gets.strip)
-    display_converted(converted)
+    puts converted
+    if !converted.rgb
+      clear
+      puts clr_str("Invalid color, please try again.", "#F92672")
+      convert_menu
+    else
+      display_converted(converted)
+    end
   end
 
   def display_converted(converted)
@@ -81,7 +90,8 @@ class ArtificiallyColored::CLI
     4.times do
       clear
       if i == 0
-        puts "Examples of valid colors: #E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
+        puts "Examples of valid colors:"
+        puts "#E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
         puts
         puts "Enter the first color or enter \"done\" to generate random palettes:"
       else
@@ -183,13 +193,11 @@ class ArtificiallyColored::CLI
       i -= 1
       sleep(0.04)
     end
-    puts "\e[?25l"
     15.times do
       clear
       print Rainbow(string).color(@cycle_colors.sample)
       sleep(0.1)
     end
-    puts "\e[?25h"
   end
 
 end
