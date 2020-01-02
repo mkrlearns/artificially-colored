@@ -12,7 +12,38 @@ class ArtificiallyColored::CLI
   end
   
   def main_menu
+    clear
+    intro
+    puts "Press \"Enter\" to continue"
+    gets
+    clear
+    selection_menu
     ai_menu
+  end
+
+  def intro
+    puts "Welcome to Artificially Colored!"
+    puts
+    puts "This tool will generate color palettes aided by AI and "
+    puts "convert CSS color codes."
+  end
+
+  def selection_menu
+    puts "1. Create an AI generated color palette."
+    puts "2. Convert CSS color codes."
+    selection = gets.strip
+    if selection == "1"
+      ai_menu
+    elsif selection == "2"
+      convert_menu
+    else
+      puts "Invalid selection, please try again."
+    end
+    selection_menu
+  end
+
+  def convert_menu
+    puts "placeholder"
   end
 
   def ai_menu
@@ -23,6 +54,8 @@ class ArtificiallyColored::CLI
     4.times do
       clear
       if i == 0
+        puts "Examples of valid colors: #E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
+        puts
         puts "Enter the first color or enter \"done\" to generate random palettes:"
       else
         puts "Current Selections:"
@@ -62,14 +95,15 @@ class ArtificiallyColored::CLI
     loading = ""
     user_num.times do
       clear
+      swatches = []
       puts Rainbow("Depending on the amount of palettes, this may take some time.").color(@cycle_colors.sample) 
       puts loading + "\e[?25l"
       loading += fake_loader + fake_loader
-      swatches = []
       gen_colors = ArtificiallyColored::AI.new.connect(user_colors)
       if !gen_colors
         puts "Unable to connect to AI API, press \"Enter\" to try again."
         ai_get_results(user_colors, user_num)
+      end
       @all_colors << gen_colors
       gen_colors.each { |i| swatches << color_bar(6, i.hex)}
       @palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"

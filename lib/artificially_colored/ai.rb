@@ -21,7 +21,6 @@ class ArtificiallyColored::AI
       end
       return palette
     else
-      puts 'Unable to connect to API.'
       return
     end
   end
