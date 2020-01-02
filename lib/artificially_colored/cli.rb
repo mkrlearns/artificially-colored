@@ -52,7 +52,7 @@ class ArtificiallyColored::CLI
   end
 
   def convert_menu
-    puts "Convert between hex, rgb, or hsl CSS colors."
+    puts clr_str("Convert between hex, rgb, or hsl CSS colors.", "#A6E22E")
     puts "Examples of valid colors:"
     puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)"
     puts
@@ -92,20 +92,27 @@ class ArtificiallyColored::CLI
         puts "Examples of valid colors:"
         puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)"
         puts
-        puts "Enter the first color or enter \"done\" to generate random palettes:"
+        puts clr_str("Enter the first color or enter \"done\" to generate random palettes:", "#A6E22E")
       else
+        puts clr_str("Enter \"clear\" to clear current selections.", "#A6E22E")
+        puts
         puts "Current Selections:"
         puts selections
         puts
-        puts "Enter the next color or enter \"done\" to generate palettes:"
+        puts clr_str("Enter the next color or enter \"done\" to generate palettes:", "#A6E22E")
       end
-      user_input = gets.strip
-      if user_input.downcase == "done"
-        user_num = 498.498
+      user_input = gets.strip.downcase
+      if user_input == "clear"
+        self.class.new.ai_menu
+      elsif user_input == "done"
+        query = clr_str("How many palettes would you like to generate (1-10)?", "#A6E22E")
+        clear
+        puts query
+        user_num = gets.strip.to_i
         while !(user_num > 0 && user_num <= 10)
           clear
-          puts "Invalid selection." if user_num != 498.498
-          puts "How many palettes would you like to generate (1-10)?"
+          puts clr_str("Invalid selection, please try again.", "#F92672")
+          puts query
           user_num = gets.strip.to_i
         end
         rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
@@ -151,8 +158,11 @@ class ArtificiallyColored::CLI
     clear
     @palettes.uniq.each { |palette| puts "#{@palettes.uniq.index(palette) + 1}: #{palette}\n" }
     puts "\e[?25h"
-    puts "Select a number for the color codes to that number's palette."
-    selection = gets.strip.to_i - 1
+    puts clr_str("Select a number for the color codes to that number's palette", "#A6E22E")
+    puts clr_str("or type \"new\" to start from color selection.", "#A6E22E")
+    selection = gets.strip
+    self.class.new.ai_menu if selection == "new"
+    selection = gets.to_i - 1
     ai_more_info(selection)
   end
 
@@ -163,8 +173,11 @@ class ArtificiallyColored::CLI
       bar = color_bar(1, i.hex)
       puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)}"
     end
-    puts "Enter \"back\" to go back, \"new\" to start fresh, or \"exit\" to quit."
-    gets
+    puts
+    puts clr_str("Press \"Enter\" to go back. Type \"new\" to start fresh or \"exit\" to quit.", "#A6E22E")
+    selection = gets.downcase.strip
+    self.class.new.selection_menu if selection == "new"
+    exit if selection == "exit"
     ai_display_results
   end
 
