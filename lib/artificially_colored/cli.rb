@@ -33,17 +33,39 @@ class ArtificiallyColored::CLI
     puts "2. Convert CSS color codes."
     selection = gets.strip
     if selection == "1"
+      clear
       ai_menu
     elsif selection == "2"
+      clear
       convert_menu
     else
+      clear
       puts "Invalid selection, please try again."
+      selection_menu
     end
-    selection_menu
   end
 
   def convert_menu
-    puts "placeholder"
+    puts "This tool will convert a hex, rgb, hsl, or hsv CSS color to "
+    puts "all of the previously mentioned codes."
+    puts "Examples of valid colors: #E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
+    puts "Enter a color code to convert:"
+    converted = @get_colors.new(gets.strip)
+    display_converted(converted)
+  end
+
+  def display_converted(converted)
+    clear
+    puts color_bar(18, converted.hex)
+    puts converted.hex
+    puts converted.rgb
+    puts converted.hsl
+    puts converted.hsv
+    puts
+    puts "Press \"Enter\" to go back to menu."
+    gets
+    clear
+    selection_menu
   end
 
   def ai_menu
