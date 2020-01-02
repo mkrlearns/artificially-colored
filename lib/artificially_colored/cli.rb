@@ -28,7 +28,7 @@ class ArtificiallyColored::CLI
     puts clr_str("Welcome to Artificially Colored!", "#A6E22E")
     puts
     puts "This tool will generate color palettes aided by AI "
-    puts "and convert CSS color codes to and from hex, rgb, hsl, and hsv."
+    puts "and convert CSS color codes to and from hex, rgb, and hsl."
     puts "\e[?25h"
   end
 
@@ -52,9 +52,9 @@ class ArtificiallyColored::CLI
   end
 
   def convert_menu
-    puts "Convert between hex, rgb, hsl, or hsv CSS colors."
+    puts "Convert between hex, rgb, or hsl CSS colors."
     puts "Examples of valid colors:"
-    puts "#E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
+    puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)"
     puts
     puts clr_str("Enter a color code to convert:", "#A6E22E")
     converted = @get_colors.new(gets.strip)
@@ -74,7 +74,6 @@ class ArtificiallyColored::CLI
     puts converted.hex
     puts converted.rgb
     puts converted.hsl
-    puts converted.hsv
     puts
     puts "Press \"Enter\" to go back to menu."
     gets
@@ -91,7 +90,7 @@ class ArtificiallyColored::CLI
       clear
       if i == 0
         puts "Examples of valid colors:"
-        puts "#E69F66, rgb(230, 159, 102), hsl(27°, 72%, 65%), hsv(27°, 56%, 90%)"
+        puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)"
         puts
         puts "Enter the first color or enter \"done\" to generate random palettes:"
       else
@@ -162,7 +161,7 @@ class ArtificiallyColored::CLI
     info = @all_colors.uniq[selection]
     info.each do |i|
       bar = color_bar(1, i.hex)
-      puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)} #{bar}  #{i.hsv}"
+      puts "#{bar}  #{i.hex.ljust(8)} #{bar}  #{i.rgb.ljust(18)} #{bar}  #{i.hsl.ljust(20)}"
     end
     puts "Enter \"back\" to go back, \"new\" to start fresh, or \"exit\" to quit."
     gets

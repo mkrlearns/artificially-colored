@@ -1,5 +1,5 @@
 class ArtificiallyColored::Scraper
-  attr_reader :rgb, :hex, :hsl, :hsv
+  attr_reader :rgb, :hex, :hsl
   
   def initialize(user_color)
     color = user_color.dup
@@ -11,8 +11,6 @@ class ArtificiallyColored::Scraper
       url = !color.match(/\A#?(?:[A-F0-9]{3}){1,2}\z/i).nil? && color.sub!('#', 'hex-color-')
     elsif color.downcase.include? 'hsl'
       url = color.encode('UTF-8').delete!("\u{00B0}").sub!(/hsl/i, 'hsl-color-')
-    elsif color.downcase.include? 'hsv'
-      url = color.encode('UTF-8').delete!("\u{00B0}").sub!(/hsv/i, 'hsv-color-')
     elsif !color.match(/\A[a-zA-Z0-9]*\z/).nil? && (color.length == 6 || color.length == 3)
       url = "hex-color-#{color}"
     else
@@ -26,7 +24,6 @@ class ArtificiallyColored::Scraper
       @rgb = "rgb(#{doc.css('#copyRgbtext').text})"
       @hex = "##{doc.css('#copyHextext').text}"
       @hsl = "hsl(#{doc.css('#copyHSLtext').text})"
-      @hsv = "hsv(#{doc.css('#copyHSVtext').text})"
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found'
         return
