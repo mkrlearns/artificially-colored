@@ -1,6 +1,6 @@
 class ArtificiallyColored::AI
 
-  def ai_connect(array)
+  def connect(array)
     uri = URI.parse("http://colormind.io/api/")
     request = Net::HTTP::Post.new(uri)
     if array == []

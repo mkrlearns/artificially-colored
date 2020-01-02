@@ -3,6 +3,8 @@ class ArtificiallyColored::CLI
   def initialize
     @palettes = []
     @all_colors = []
+    @get_colors = ArtificiallyColored::Scraper
+    @cycle_colors = ['#AE81FF',"#66D9EF","#E69F66","#FD971F","#F92672"]
   end
 
   def call
@@ -42,11 +44,11 @@ class ArtificiallyColored::CLI
         ai_get_results(rgb_selections, user_num)
         break
       else
-        color = ArtificiallyColored::Scraper.new(user_input)
+        color = @get_colors.new(user_input)
         while !color.rgb
           puts "Invalid color, please try again."
           user_input = gets.strip
-          color = ArtificiallyColored::Scraper.new(user_input)
+          color = @get_colors.new(user_input)
         end
         selections += "#{color_bar(1, color.hex)}  #{user_input} "
         user_inputs << user_input
@@ -60,11 +62,11 @@ class ArtificiallyColored::CLI
     loading = ""
     user_num.times do
       clear
-      puts "Depending on the amount of palettes, this may take some time."
+      puts Rainbow("Depending on the amount of palettes, this may take some time.").color(@cycle_colors.sample) 
       puts loading + "\e[?25l"
       loading += fake_loader + fake_loader
       swatches = []
-      gen_colors = ArtificiallyColored::AI.new.ai_connect(user_colors)
+      gen_colors = ArtificiallyColored::AI.new.connect(user_colors)
       @all_colors << gen_colors
       gen_colors.each { |i| swatches << color_bar(6, i.hex)}
       @palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"
@@ -98,7 +100,7 @@ class ArtificiallyColored::CLI
   end
 
   def fake_loader
-    Rainbow("▎" * 2).color(['#AE81FF',"#66D9EF","#E69F66","#FD971F","#F92672"].sample) 
+    Rainbow("▎" * 2).color(@cycle_colors.sample) 
   end
 
   def color_bar(width, color)
