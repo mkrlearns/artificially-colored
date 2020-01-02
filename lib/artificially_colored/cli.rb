@@ -67,6 +67,9 @@ class ArtificiallyColored::CLI
       loading += fake_loader + fake_loader
       swatches = []
       gen_colors = ArtificiallyColored::AI.new.connect(user_colors)
+      if !gen_colors
+        puts "Unable to connect to AI API, press \"Enter\" to try again."
+        ai_get_results(user_colors, user_num)
       @all_colors << gen_colors
       gen_colors.each { |i| swatches << color_bar(6, i.hex)}
       @palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"
