@@ -24,7 +24,7 @@ class ArtificiallyColored::Scraper
       file = open("https://convertingcolors.com/#{url.strip}.html")
       doc = Nokogiri::HTML(file)
       @rgb = "rgb(#{doc.css('#copyRgbtext').text})"
-      @hex = "##{doc.css('#copyHextext').text})"
+      @hex = "##{doc.css('#copyHextext').text}"
       @hsl = "hsl(#{doc.css('#copyHSLtext').text})"
       @hsv = "hsv(#{doc.css('#copyHSVtext').text})"
     rescue OpenURI::HTTPError => e

@@ -1,7 +1,6 @@
 class ArtificiallyColored::CLI
 
   def initialize
-    @scraper = ArtificiallyColored::Scraper
     @selections = ""
     @user_inputs = []
     @rgb_selections = []
@@ -19,11 +18,14 @@ class ArtificiallyColored::CLI
     i = 0
     4.times do
       clear
-      puts "Enter the first color or enter \"done\" to generate random palettes:" if i == 0
-      puts "Current Selections:" if i > 0
-      puts @selections if i > 0
-      puts if i > 0
-      puts "Enter the next color or enter \"done\" to generate palettes:" if i > 0
+      if i == 0
+        puts "Enter the first color or enter \"done\" to generate random palettes:"
+      else
+        puts "Current Selections:"
+        puts @selections
+        puts
+        puts "Enter the next color or enter \"done\" to generate palettes:"
+      end
       user_input = gets.strip
       if user_input.downcase == "done"
         array = ai_prepare_array(@rgb_selections)
@@ -31,11 +33,11 @@ class ArtificiallyColored::CLI
         ai_get_results(array, 5)
         break
       else
-        color = @scraper.new(user_input)
+        color = ArtificiallyColored::Scraper.new(user_input)
         while !color.rgb
           puts "Invalid color, please try again."
           user_input = gets.strip
-          color = @scraper.new(user_input)
+          color = ArtificiallyColored::Scraper.new(user_input)
         end
         @selections += "#{color_bar(1, color.hex)}  #{user_input} "
         @user_inputs << user_input

@@ -1,9 +1,5 @@
 class ArtificiallyColored::AI
 
-  def initialize
-    @scraper = ArtificiallyColored::Scraper
-  end
-
   def ai_connect(array)
     uri = URI.parse("http://colormind.io/api/")
     request = Net::HTTP::Post.new(uri)
@@ -21,7 +17,7 @@ class ArtificiallyColored::AI
       palette = []
       json = JSON.parse(response.body)
       json['result'].each do |color|
-        palette << @scraper.new("rgb(#{color.to_s.delete('[]')})")
+        palette << ArtificiallyColored::Scraper.new("rgb(#{color.to_s.delete('[]')})")
       end
       return palette
     else
