@@ -28,7 +28,10 @@ class ArtificiallyColored::Scraper
       if e.message == '404 Not Found'
         return
       else
-        raise e
+        puts "There was an issue connecting to the required site."
+        puts "Press \"Enter\" to try again."
+        gets
+        return
       end
     end
   end

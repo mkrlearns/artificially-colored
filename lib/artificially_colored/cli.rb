@@ -199,10 +199,10 @@ class ArtificiallyColored::CLI
       i -= 1
       sleep(0.04)
     end
-    15.times do
+    7.times do
       clear
       print Rainbow(string).color(@cycle_colors.sample)
-      sleep(0.1)
+      sleep(0.2)
     end
     clear
     print Rainbow(string).color(color)
