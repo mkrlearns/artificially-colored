@@ -175,7 +175,7 @@ class ArtificiallyColored::CLI
     puts clr_str("or type \"new\" to start from color selection.", "#A6E22E")
     selection = gets.strip
     self.class.new.ai_menu if selection == "new"
-    selection = gets.to_i - 1
+    selection = selection.to_i - 1
     ai_more_info(selection)
   end
 
