@@ -44,7 +44,9 @@ class ArtificiallyColored::CLI
   end
 
   def credits
-    type_on("Artificially Colored was created by Ryan Meek.\nColor conversions scraped from https://convertingcolors.com/.\nDeep learning color palettes API from http://colormind.io/.\n\n", "#A6E22E")
+    type_on("Artificially Colored was created by Ryan Meek.\nColor conversions " +
+      "scraped from https://convertingcolors.com/.\nDeep learning color palettes " + "
+      API from http://colormind.io/.\n\n", "#A6E22E")
     puts clr_str("Press \"Enter\" to go back to menu.", "#A6E22E")
     gets
     clear
@@ -99,7 +101,7 @@ class ArtificiallyColored::CLI
       user_input = gets.strip.downcase
       if user_input == "clear"
         self.class.new.ai_menu
-      elsif user_input == "done"
+      elsif user_input == "done" or i == 3
         query = clr_str("How many palettes would you like to generate (1-10)?", "#A6E22E")
         clear
         puts query

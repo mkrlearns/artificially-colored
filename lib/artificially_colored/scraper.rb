@@ -3,16 +3,16 @@ class ArtificiallyColored::Scraper
   
   def initialize(user_color)
     color = user_color.dup
-    color = color.delete!('()%').gsub!(',', '_').gsub!(' ', '') if color.include? ','
+    color = color.strip.delete!('()%').gsub!(',', '_').gsub!(' ', '') if color.include? ','
     
     if color.downcase.include? 'rgb'
       url = color.sub!(/rgb/i, 'rgb-color-')
-    elsif color.include? '#'
-      url = !color.match(/\A#?(?:[A-F0-9]{3}){1,2}\z/i).nil? && color.sub!('#', 'hex-color-')
+    elsif !color.match(/\A[a-zA-Z0-9]*\z/).nil? and (color.length == 6 or color.length == 3)
+      url = "hex-color-#{color}"
+    elsif !color.match(/\A#?(?:[A-F0-9]{3}){1,2}\z/i).nil? #color.include? '#' && 
+      url = color.sub!('#', 'hex-color-')
     elsif color.downcase.include? 'hsl'
       url = color.encode('UTF-8').delete!("\u{00B0}").sub!(/hsl/i, 'hsl-color-')
-    elsif !color.match(/\A[a-zA-Z0-9]*\z/).nil? && (color.length == 6 || color.length == 3)
-      url = "hex-color-#{color}"
     else
       return
     end
