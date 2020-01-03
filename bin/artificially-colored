@@ -2,4 +2,4 @@
 
 require_relative '../lib/artificially_colored'
 
-ArtificiallyColored::CLI.new.call 
+ArtificiallyColored::CLI.new.main_menu 

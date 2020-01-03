@@ -1,6 +1,6 @@
 class ArtificiallyColored::Scraper
   attr_reader :rgb, :hex, :hsl
-  
+
   def initialize(user_color)
     color = user_color.dup
     color = color.strip.delete!('()%').gsub!(',', '_').gsub!(' ', '') if color.include? ','
@@ -21,14 +21,14 @@ class ArtificiallyColored::Scraper
       return if !url
       file = open("https://convertingcolors.com/#{url.strip}.html")
       doc = Nokogiri::HTML(file)
-      @rgb = "rgb(#{doc.css('#copyRgbtext').text})"
-      @hex = "##{doc.css('#copyHextext').text}"
-      @hsl = "hsl(#{doc.css('#copyHSLtext').text})"
+      @rgb = doc.css('#copyRgbtext').text ? "rgb(#{doc.css('#copyRgbtext').text})" : nil
+      @hex = doc.css('#copyHextext').text ? "##{doc.css('#copyHextext').text}" : nil
+      @hsl = doc.css('#copyHSLtext').text ? "hsl(#{doc.css('#copyHSLtext').text})" : nil
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found'
         return
       else
-        puts "There was an issue connecting to the required site."
+        puts "There was an issue connecting to convertingcolors.com."
         puts "Press \"Enter\" to try again."
         gets
         return

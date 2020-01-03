@@ -7,10 +7,6 @@ class ArtificiallyColored::CLI
     @cycle_colors = ['#AE81FF',"#66D9EF","#E69F66","#FD971F","#F92672"]
   end
 
-  def call
-    main_menu
-  end
-  
   def main_menu
     clear
     intro
@@ -23,9 +19,8 @@ class ArtificiallyColored::CLI
   def intro
     puts "\e[?25l"
     puts type_on("Welcome to Artificially Colored!\n", "#A6E22E")
-    puts "This tool will generate color palettes aided by AI "
-    puts "and convert CSS color codes to and from hex, rgb, and hsl."
-    puts "\e[?25h"
+    puts "This tool will generate color palettes aided by deep learning "
+    puts "and convert CSS color codes to and from hex, rgb, and hsl.\e[?25h"
   end
 
   def selection_menu
@@ -44,10 +39,12 @@ class ArtificiallyColored::CLI
   end
 
   def credits
+    puts "\e[?25l"
     type_on("Artificially Colored was created by Ryan Meek.\nColor conversions " +
-      "scraped from https://convertingcolors.com/.\nDeep learning color palettes " + "
-      API from http://colormind.io/.\n\n", "#A6E22E")
+      "scraped from https://convertingcolors.com/.\nDeep learning color palettes " +
+      "API from http://colormind.io/.\n\n", "#A6E22E")
     puts clr_str("Press \"Enter\" to go back to menu.", "#A6E22E")
+    puts "\e[?25h"
     gets
     clear
     selection_menu
@@ -75,9 +72,10 @@ class ArtificiallyColored::CLI
     puts converted.hex
     puts converted.rgb
     puts converted.hsl
-    puts clr_str("\nPress \"Enter\" to go back to menu.", "#A6E22E")
-    gets
+    puts clr_str("\nPress \"Enter\" to go back to menu or type \"new\" to convert another color.", "#A6E22E")
+    selection = gets.strip.downcase
     clear
+    convert_menu if selection == "new"
     selection_menu
   end
 
@@ -91,12 +89,12 @@ class ArtificiallyColored::CLI
       if i == 0
         puts "Examples of valid colors:"
         puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
-        puts clr_str("Enter the first color or enter \"done\" to generate random palettes:", "#A6E22E")
+        puts clr_str("Enter the first color or type \"done\" to generate random palettes:", "#A6E22E")
       else
-        puts clr_str("Enter \"clear\" to clear current selections.\n", "#A6E22E")
+        puts clr_str("Type \"clear\" to clear current selections.\n", "#A6E22E")
         puts "Current Selections:"
         puts selections
-        puts clr_str("\nEnter the next color or enter \"done\" to generate palettes:", "#A6E22E")
+        puts clr_str("\nEnter the next color or type \"done\" to generate palettes:", "#A6E22E")
       end
       user_input = gets.strip.downcase
       if user_input == "clear"
@@ -136,7 +134,8 @@ class ArtificiallyColored::CLI
     user_num.times do
       clear
       swatches = []
-      puts Rainbow("Depending on the amount of palettes, this may take some time.").color(@cycle_colors.sample) 
+      puts Rainbow("Depending on the amount of palettes, " +
+        "this may take some time.").color(@cycle_colors.sample) 
       puts loading + "\e[?25l"
       loading += fake_loader + fake_loader
       gen_colors = ArtificiallyColored::AI.new.connect(user_colors)
