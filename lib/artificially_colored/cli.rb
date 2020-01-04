@@ -89,17 +89,17 @@ class ArtificiallyColored::CLI
       if i == 0
         puts "Examples of valid colors:"
         puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
-        puts clr_str("Enter the first color or type \"done\" to generate random palettes:", "#A6E22E")
+        puts clr_str("Enter the first color or hit \"Enter\" to generate random palettes:", "#A6E22E")
       else
         puts clr_str("Type \"clear\" to clear current selections.\n", "#A6E22E")
         puts "Current Selections:"
         puts selections
-        puts clr_str("\nEnter the next color or type \"done\" to generate palettes:", "#A6E22E")
+        puts clr_str("\nAdd the next color or hit \"Enter\" to generate palettes:", "#A6E22E")
       end
       user_input = gets.strip
       if user_input == "clear"
         self.class.new.ai_menu
-      elsif user_input == "done" or i == 3
+      elsif user_input == "" or i == 3
         query = clr_str("How many palettes would you like to generate (1-10)?", "#A6E22E")
         clear
         puts query
@@ -117,7 +117,10 @@ class ArtificiallyColored::CLI
       else
         color = @get_colors.new(user_input)
         while !color.rgb
-          puts "Invalid color, please try again."
+          clear
+          puts clr_str("Invalid color, please try again.", "#F92672")
+          puts "Examples of valid colors:"
+          puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
           user_input = gets.strip
           color = @get_colors.new(user_input)
         end
@@ -138,8 +141,8 @@ class ArtificiallyColored::CLI
       clear
       swatches = []
       puts Rainbow("Depending on the amount of palettes, " +
-        "this may take some time.").color(@cycle_colors.sample) 
-      puts loading + "\e[?25l"
+        "this may take some time.").color(@cycle_colors.sample)  + "\e[?25l"
+      puts loading
       loading += fake_loader + fake_loader
       gen_colors = ArtificiallyColored::AI.new.connect(user_colors)
       if !gen_colors
