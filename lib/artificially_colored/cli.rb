@@ -96,7 +96,7 @@ class ArtificiallyColored::CLI
         puts selections
         puts clr_str("\nEnter the next color or type \"done\" to generate palettes:", "#A6E22E")
       end
-      user_input = gets.strip.downcase
+      user_input = gets.strip
       if user_input == "clear"
         self.class.new.ai_menu
       elsif user_input == "done" or i == 3
@@ -120,6 +120,9 @@ class ArtificiallyColored::CLI
           puts "Invalid color, please try again."
           user_input = gets.strip
           color = @get_colors.new(user_input)
+        end
+        if user_input.encode('UTF-8').include?("\u{00B0}")
+          user_input = user_input.encode('UTF-8').delete!("\u{00B0}").encode('ASCII')
         end
         selections += "#{color_bar(1, color.hex)}  #{user_input} "
         user_inputs << user_input
