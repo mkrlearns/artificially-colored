@@ -5,6 +5,9 @@ class ArtificiallyColored::CLI
     @all_colors = []
     @get_colors = ArtificiallyColored::Scraper
     @cycle_colors = ['#AE81FF',"#66D9EF","#E69F66","#FD971F","#F92672"]
+    @selections = ""
+    @user_inputs = []
+    @rgb_selections = []
   end
 
   def main_menu
@@ -80,59 +83,54 @@ class ArtificiallyColored::CLI
   end
 
   def ai_menu
-    i = 0
-    selections = ""
-    user_inputs = []
-    rgb_selections = []
-    4.times do
-      clear
-      if i == 0
+    while @rgb_selections.length < 4 do
+      if @rgb_selections.length == 0
         puts "Examples of valid colors:"
         puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
         puts clr_str("Enter the first color or hit \"Enter\" to generate random palettes:", "#A6E22E")
       else
-        puts clr_str("Type \"clear\" to clear current selections.\n", "#A6E22E")
+        puts clr_str("Type \"clear\" to clear all selections.\n", "#A6E22E")
         puts "Current Selections:"
-        puts selections
+        puts @selections
         puts clr_str("\nAdd the next color or hit \"Enter\" to generate palettes:", "#A6E22E")
       end
       user_input = gets.strip
       if user_input == "clear"
         self.class.new.ai_menu
-      elsif user_input == "" or i == 3
-        query = clr_str("How many palettes would you like to generate (1-10)?", "#A6E22E")
-        clear
-        puts query
-        user_num = gets.strip.to_i
-        while !(user_num > 0 && user_num <= 10)
-          clear
-          puts clr_str("Invalid selection, please try again.", "#F92672")
-          puts query
-          user_num = gets.strip.to_i
-        end
-        rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
-        rgb_selections << "N" while rgb_selections.length < 5
-        ai_get_results(rgb_selections, user_num)
+      elsif user_input == ""
         break
       else
         color = @get_colors.new(user_input)
-        while !color.rgb
+        if !color.rgb
           clear
           puts clr_str("Invalid color, please try again.", "#F92672")
-          puts "Examples of valid colors:"
-          puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
-          user_input = gets.strip
-          color = @get_colors.new(user_input)
+          ai_menu
+          break
         end
         if user_input.encode('UTF-8').include?("\u{00B0}")
           user_input = user_input.encode('UTF-8').delete!("\u{00B0}").encode('ASCII')
         end
-        selections += "#{color_bar(1, color.hex)}  #{user_input} "
-        user_inputs << user_input
-        rgb_selections << color.rgb
-        i += 1
+        @selections += "#{color_bar(1, color.hex)}  #{user_input} "
+        @user_inputs << user_input
+        @rgb_selections << color.rgb
+        clear
       end
     end
+    clear
+    ai_num_palettes
+  end
+
+  def ai_num_palettes
+    puts clr_str("How many palettes would you like to generate (1-10)?", "#A6E22E")
+    user_num = gets.strip.to_i
+    while !(user_num > 0 && user_num <= 10)
+      clear
+      puts clr_str("Invalid selection, please try again.", "#F92672")
+      ai_num_palettes
+    end
+    @rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
+    @rgb_selections << "N" while @rgb_selections.length < 5
+    ai_get_results(@rgb_selections, user_num)
   end
 
   def ai_get_results(user_colors, user_num)
