@@ -22,8 +22,8 @@ class ArtificiallyColored::CLI
   def intro
     puts "\e[?25l"
     puts type_on("Welcome to Artificially Colored!\n", "#A6E22E")
-    puts "This tool will generate color palettes aided by deep learning "
-    puts "and convert CSS color codes to and from hex, rgb, and hsl.\e[?25h"
+    puts "This tool will generates five color palettes aided by deep learning "
+    puts "and converts CSS color codes to and from hex, rgb, and hsl.\e[?25h"
   end
 
   def selection_menu
@@ -85,6 +85,7 @@ class ArtificiallyColored::CLI
   def ai_menu
     while @rgb_selections.length < 4 do
       if @rgb_selections.length == 0
+        puts clr_str("Provide between 0-4 colors to generate a five color palette.", "#A6E22E")
         puts "Examples of valid colors:"
         puts "#E69F66, rgb(230, 159, 102), hsl(27, 72%, 65%)\n\n"
         puts clr_str("Enter the first color or hit \"Enter\" to generate random palettes:", "#A6E22E")
@@ -96,6 +97,7 @@ class ArtificiallyColored::CLI
       end
       user_input = gets.strip
       if user_input == "clear"
+        clear
         self.class.new.ai_menu
       elsif user_input == ""
         break
@@ -141,7 +143,7 @@ class ArtificiallyColored::CLI
       puts Rainbow("Depending on the amount of palettes, " +
         "this may take some time.").color(@cycle_colors.sample)  + "\e[?25l"
       puts loading
-      loading += fake_loader + fake_loader
+      loading += fake_loader
       gen_colors = ArtificiallyColored::AI.new.connect(user_colors)
       if !gen_colors
         puts "Unable to connect to AI API, press \"Enter\" to try again."
@@ -151,11 +153,11 @@ class ArtificiallyColored::CLI
       gen_colors.each { |i| swatches << color_bar(6, i.hex)}
       @palettes << "#{swatches[0]} #{swatches[1]} #{swatches[2]} #{swatches[3]} #{swatches[4]}"
     end
+    clear
     ai_display_results
   end
 
   def ai_display_results
-    clear
     @palettes.uniq.each { |palette| puts "#{@palettes.uniq.index(palette) + 1}: #{palette}\n" }
     puts "\e[?25h"
     puts clr_str("Select a number for the color codes to that number's palette", "#A6E22E")
@@ -164,9 +166,13 @@ class ArtificiallyColored::CLI
     if selection == "new"
       clear
       self.class.new.ai_menu
-    else
+    elsif is_number?(selection) and selection.to_i < 0 and selection.to_i <= palettes.uniq.length
       selection = selection.to_i - 1
       ai_more_info(selection)
+    else
+      clear
+      puts clr_str("Invalid selection, please try again.", "#F92672")
+      ai_display_results
     end
   end
 
@@ -194,7 +200,7 @@ class ArtificiallyColored::CLI
   end
 
   def fake_loader
-    Rainbow("▎" * 2).color(@cycle_colors.sample) 
+    Rainbow("▎" * [2,3,4,5].sample).color(@cycle_colors.sample) 
   end
 
   def color_bar(width, color)
@@ -220,6 +226,10 @@ class ArtificiallyColored::CLI
     end
     clear
     print Rainbow(string).color(color)
+  end
+
+  def is_number?(string)
+    true if Float(string) rescue false
   end
 
 end
