@@ -161,9 +161,13 @@ class ArtificiallyColored::CLI
     puts clr_str("Select a number for the color codes to that number's palette", "#A6E22E")
     puts clr_str("or type \"new\" to start from color selection.", "#A6E22E")
     selection = gets.strip
-    self.class.new.ai_menu if selection == "new"
-    selection = selection.to_i - 1
-    ai_more_info(selection)
+    if selection == "new"
+      clear
+      self.class.new.ai_menu
+    else
+      selection = selection.to_i - 1
+      ai_more_info(selection)
+    end
   end
 
   def ai_more_info(selection)
@@ -175,9 +179,14 @@ class ArtificiallyColored::CLI
     end
     puts clr_str("\nPress \"Enter\" to go back. Type \"new\" to start fresh or \"exit\" to quit.", "#A6E22E")
     selection = gets.downcase.strip
-    self.class.new.selection_menu if selection == "new"
-    exit if selection == "exit"
-    ai_display_results
+    if selection == "new"
+      clear
+      self.class.new.selection_menu
+    elsif selection == "exit"
+      exit
+    else
+      ai_display_results
+    end
   end
 
   def clear
