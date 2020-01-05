@@ -22,20 +22,22 @@ class ArtificiallyColored::CLI
   def intro
     puts "\e[?25l"
     puts type_on("Welcome to Artificially Colored!\n", "#A6E22E")
-    puts "This tool will generates five color palettes aided by deep learning "
+    puts "This tool will generate five color palettes aided by deep learning "
     puts "and converts CSS color codes to and from hex, rgb, and hsl.\e[?25h"
   end
 
   def selection_menu
     puts clr_str("1. ", "#A6E22E") + "Create an AI generated color palette"
     puts clr_str("2. ", "#A6E22E") + "Convert color codes"
-    puts clr_str("3. ", "#A6E22E") + "Credits\n\n"
-    puts clr_str("Enter a selection between 1 and 3:", "#A6E22E")
+    puts clr_str("3. ", "#A6E22E") + "Credits"
+    puts clr_str("4. ", "#A6E22E") + "Exit\n\n"
+    puts clr_str("Enter a selection between 1 and 4:", "#A6E22E")
     selection = gets.strip
     clear
     ai_menu if selection == "1"
     convert_menu if selection == "2"
     credits if selection == "3"
+    exit if selection == "4"
     clear
     puts clr_str("Invalid selection, please try again.", "#F92672")
     selection_menu
@@ -169,7 +171,7 @@ class ArtificiallyColored::CLI
     if selection == "new"
       clear
       self.class.new.ai_menu
-    elsif is_number?(selection) and selection.to_i < 0 and selection.to_i <= palettes.uniq.length
+    elsif is_number?(selection.to_i) and selection.to_i > 0 and selection.to_i <= @palettes.uniq.length
       selection = selection.to_i - 1
       ai_more_info(selection)
     else
@@ -194,6 +196,7 @@ class ArtificiallyColored::CLI
     elsif selection == "exit"
       exit
     else
+      clear
       ai_display_results
     end
   end
