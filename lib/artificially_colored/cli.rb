@@ -117,16 +117,16 @@ class ArtificiallyColored::CLI
       end
     end
     clear
-    ai_num_palettes
+    ai_gen_palettes
   end
 
-  def ai_num_palettes
+  def ai_gen_palettes
     puts clr_str("How many palettes would you like to generate (1-10)?", "#A6E22E")
     user_num = gets.strip.to_i
     while !(user_num > 0 && user_num <= 10)
       clear
       puts clr_str("Invalid selection, please try again.", "#F92672")
-      ai_num_palettes
+      ai_gen_palettes
     end
     @rgb_selections.map! { |color|color.delete('rgb()').split(',').map(&:to_i) }
     @rgb_selections << "N" while @rgb_selections.length < 5
