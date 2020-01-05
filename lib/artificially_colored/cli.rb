@@ -159,6 +159,9 @@ class ArtificiallyColored::CLI
 
   def ai_display_results
     @palettes.uniq.each { |palette| puts "#{@palettes.uniq.index(palette) + 1}: #{palette}\n" }
+    duplicates = @palettes.length - @palettes.uniq.length
+    puts "\n#{duplicates} duplicate palette was removed." if duplicates == 1
+    puts "\n#{duplicates} duplicate palettes were removed." if duplicates > 1
     puts "\e[?25h"
     puts clr_str("Select a number for the color codes to that number's palette", "#A6E22E")
     puts clr_str("or type \"new\" to start from color selection.", "#A6E22E")
